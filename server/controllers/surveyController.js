@@ -1,5 +1,6 @@
 const Survey = require("../models/Survey");
 const add=async(req,res)=>{
+    console.log("add server");
     let {title,sex,sector,age,questions} = req.body
     // sector=='h'?sector='חרדי':sector=='hi'?sector='חילוני':sector=='l'?sector='לא משתייך':sector=='m'?sector='מסורתי':sector=='d'?sector='דתי לאומי':sector=null;
     // sex=='m'?sex='זכר':sex=='f'?sex='נקבה':sex=null;
@@ -164,7 +165,7 @@ const getSurveyById=async(req,res)=>{
 
 }
 const updateSurvey=async(req,res)=>{
-    const {_id,title,sex,sector,birthDate,age}=req.body
+    const {_id,title,sex,sector,birthDate,age,questions}=req.body
    console.log("yes i am");
    sex?console.log(sex):console.log('!sex');;
    const survey=await Survey.findById(_id).exec()
@@ -199,6 +200,8 @@ const updateSurvey=async(req,res)=>{
         // }
         if(age)
             survey.age=age;
+        if(questions)
+            survey.questions=questions;
         const MyUpdatesurvey=await survey.save()
         return res.status(201).json({success:true,
             message:`survey ${survey.title}updated successfuly`,

@@ -13,7 +13,6 @@ import { Slider } from "primereact/slider"
 
 const Survey=(props)=>{
     const {visible1,setVisible1,refetch,survey}=props
-    let {type}=props
     const [ed,setEd]=useState(false)
     const [selectedSex, setSelectedSex] = useState({name:survey.sex,code:''});
     const [selectedSector, setSelectedSector] = useState({name:survey.sector,code:''});
@@ -21,20 +20,29 @@ const Survey=(props)=>{
     const [selectedBirthDate, setSelectedBirthDate] = useState(Date);
 const title=useRef(survey.title)
 const [text,setText]=useState(survey.title)
+let [questions,setQuestions]=useState(survey.questions);
+let [newQuestions,setNewQuestions]=useState([]);
 
+console.log(questions);
 const [updateFunc, {isError2, error2, isSuccess2,data2}] = useUpdateSurveyMutation()
 const edit = async (e) => {
     // setEd(true)
     console.log("editSurvey");
         //e.preventDefault();
-    await updateFunc({_id:survey._id,title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages}).then(refetch());
+    await updateFunc({_id:survey._id,title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages,questions:questions}).then(refetch());
     // type='edit'
 };
     
    const [addQuestionFunc,{isError3,error3,isSuccess3,data3}]=useAddQuestionMutation()
    
        const addQuestion=()=>{
-        addQuestionFunc({_id:survey._id,body:'enter question'}).then(()=>refetch())
+        // addQuestionFunc({_id:survey._id,body:'enter question'}).then(()=>refetch())
+            setQuestions([...questions,{body:" ",answers:[{body:" "}]}])
+          //  <Question question={questions} /*survey={surveyQuestion.data} */ refetch={refetch}/>
+            // await addQuestionFunc({_id:survey.data._id,body:'enter question'}).then(()=>refetch())
+            // console.log(survey?.data?.questions);
+            // setQuest(true)
+        
      }
     // const [editt,setEditt]=useState(false)
     const [changeStatusFunc, {isError, error, isSuccess,data}] =useStatusSurveyMutation()
@@ -105,8 +113,8 @@ const[ages,setAges]=useState(survey.age);
         <div className="card" >
 
         <div>
-            <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" />
-            <Button ref={toggleBtnRef} icon={icon} onClick={()=>{changeIcon();edit()}}/>&nbsp;&nbsp;
+            {/* <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" />
+            <Button ref={toggleBtnRef} icon={icon} onClick={()=>{changeIcon();edit()}}/>&nbsp;&nbsp; */}
             <InputText ref={title}onChange={(e)=>setText(e.value)} defaultValue={title.current}/>
         </div>
             {/* <div>
@@ -137,12 +145,12 @@ const[ages,setAges]=useState(survey.age);
                 filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" />
         </div>   
        
-
-        {survey?.questions.map(q=><Question refetch={refetch} question={q} survey={survey}/>)}
+        {/* questions?.map((q,i)=><Question question={q} questions={questions} index={i} refetch={refetch}/>) */}
+        {questions?.map((q,i)=><Question setQuestions={setQuestions}refetch={refetch} questions={questions} question={q} survey={survey} index={i}/>)}
         <Button onClick={()=>{changestatus();setVisible1(false)}} icon="pi pi-send" rounded />
 
         <Button onClick={()=>{addQuestion(true)}} icon="pi pi-plus" rounded /> 
-        <Button onClick={()=>{edit()}} icon="pi pi-save" rounded /> 
+        <Button onClick={()=>{edit();setVisible1(false)}} icon="pi pi-save" rounded /> 
         {/* {editt && <QuestionDialog survey={survey}/>} */}
        
 

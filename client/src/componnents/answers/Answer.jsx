@@ -26,7 +26,10 @@ const Answer=(props)=> {
         console.log("aaaddQuestion");
             //e.preventDefault();
             console.log(question._id);
-            delFunc({_id:survey._id,questionId:question._id,answerId:answer._id}).then(()=>refetch())};
+            questions[qIndex].answers.splice(index,1);
+            refetch();
+            // delFunc({_id:survey._id,questionId:question._id,answerId:answer._id}).then(()=>refetch())
+        };
     
     
     
@@ -81,7 +84,7 @@ const Answer=(props)=> {
             <div>
             {/* <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" /> */}
             {/* <Button ref={toggleBtnRef} icon={icon} onClick={()=>{update();changeIcon()}}/>&nbsp;&nbsp; */}
-            <InputText ref={answeRef} defaultValue={answeRef.current} onChange={()=>{questions[qIndex].answers[index].body=answeRef.current}}/>
+            <InputText ref={answeRef} defaultValue={answeRef.current} onChange={()=>{questions[qIndex].answers[index].body=answeRef.current.value}}/>
         </div>
         </span>
     );

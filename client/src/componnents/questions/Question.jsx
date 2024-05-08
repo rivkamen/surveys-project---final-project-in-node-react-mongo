@@ -13,11 +13,10 @@ import { useAddAnswerMutation } from '../answers/ansApiSlice';
 
 const Question=(props)=> {
 const {refetch,question,index,survey}=props
-let {questions}=props
+let {questions,setQuestions}=props
 const [addAnswerFunc,{isError:addAnswerIsError,error:addAnswerError,isSuccess:addAnswerIsSuccess,data:addAnswerData={}}]=useAddAnswerMutation()
-
  const addAnswer=()=>{
-    questions[index].answers=[...questions[index].answers,{body:' '}]
+    questions[index].answers=[...questions[index].answers,{body:' '}];
        //addAnswerFunc({_id:survey._id,questionId:question._id,body:'enter answer'}).then(()=>refetch())
     }
 const [updateQuestionFunc, {isError1, error1, isSuccess1,data1}] = useUpdateQuestionMutation()
@@ -32,9 +31,15 @@ const [delFunc, {isError, error, isSuccess,data}] = useDeleteQuestionMutation()
 
     const delet = (e) => {
         console.log("delQuestion");
+        questions.splice(index,1);
+        refetch();
             //e.preventDefault();
-            delFunc({_id:survey._id,questionId:question._id}).then(()=>refetch())};
-const body=useRef(question.body)
+            // delFunc({_id:survey._id,questionId:question._id}).then(()=>refetch())
+        };
+        console.log("11111111"+question.body);
+const bodyQ=useRef(question.body)
+console.log("22222222"+bodyQ.current.value);
+
     const toast = useRef(null);
     //const router = useRouter();
     const [text, setText] = useState('');
@@ -53,7 +58,9 @@ const body=useRef(question.body)
             icon: 'pi pi-plus',
             command: async() => {
                 await addAnswer()
-                toast.current.show({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+                toast.current.show({ severity: 'info', summary: 'Add', detail: 'Data Added' });   
+                 refetch();
+
             }
         },
         
@@ -63,6 +70,8 @@ const body=useRef(question.body)
             command: async() => {
                 await delet();
                 toast.current.show({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+                refetch();
+
             }
         },
         // {
@@ -92,7 +101,7 @@ const body=useRef(question.body)
             <div>
             <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" />
             {/* <Button ref={toggleBtnRef} icon={icon} onClick={()=>{update();changeIcon()}}/>&nbsp;&nbsp; */}
-            <InputText ref={body} onChange={()=>{questions[index].body=body.current.value}} defaultValue={body.current}/>
+            <InputText ref={bodyQ} onChange={()=>{if(questions){console.log(bodyQ.current); console.log(bodyQ.current.value);setQuestions(questions)/*;questions[index].body=bodyQ.current.value*/}}}defaultValue={bodyQ.current}/>
         </div>          
             </div> }>
                 {question?.answers?.map((a,i)=>

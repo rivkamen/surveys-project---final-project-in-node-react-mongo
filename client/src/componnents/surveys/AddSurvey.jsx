@@ -200,8 +200,8 @@ const AddSurvey=(props)=>{
     const [ages, setAges] = useState([0,120]);
 
     const add = async (e) => { 
-       
-            //e.preventDefault();         
+    //    let quest=[{body:"try",answers:[{body:"catch"}]},{body:"tryagain",answers:[{body:"catchagain"}]}]
+        console.log("add");    //e.preventDefault();         
        await addSurveyFunc({title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages,questions:questions}).then(()=>refetch())
        //await updateSurveyFunc({_id:survey?.data?._id,title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages}).then(()=>refetch())
     }
@@ -216,7 +216,7 @@ const AddSurvey=(props)=>{
        }
 
     const addQuestion=async()=>{
-        setQuestions([...questions,{body:' ',answers:[{body:' '}]}])
+        setQuestions([...questions,{body:" ",answers:[{body:" "}]}])
       //  <Question question={questions} /*survey={surveyQuestion.data} */ refetch={refetch}/>
         // await addQuestionFunc({_id:survey.data._id,body:'enter question'}).then(()=>refetch())
         // console.log(survey?.data?.questions);
