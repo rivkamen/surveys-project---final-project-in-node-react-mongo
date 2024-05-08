@@ -15,9 +15,9 @@ const surveySchema=new mongoose.Schema({
         default:"creating"
     },
     
-        birthDate:{
-            type:Date,
-            immuteable:true
+        age:{
+            type:[Number],
+            default:[0,120]
         },
            
         sex:{

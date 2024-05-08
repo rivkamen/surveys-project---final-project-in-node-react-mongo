@@ -9,14 +9,15 @@ import { Inplace, InplaceContent, InplaceDisplay } from "primereact/inplace"
 import { InputText } from "primereact/inputtext"
 import { Dropdown } from 'primereact/dropdown';
 import { StyleClass } from "primereact/styleclass"
+import { Slider } from "primereact/slider"
 
 const Survey=(props)=>{
     const {visible1,setVisible1,refetch,survey}=props
     let {type}=props
     const [ed,setEd]=useState(false)
-    const [selectedSex, setSelectedSex] = useState({name:null,code:''});
-    const [selectedSector, setSelectedSector] = useState({name:null,code:''});
-    const [selectedAge, setSelectedAge] = useState({name:null,code:''});
+    const [selectedSex, setSelectedSex] = useState({name:survey.sex,code:''});
+    const [selectedSector, setSelectedSector] = useState({name:survey.sector,code:''});
+    const [selectedAge, setSelectedAge] = useState({name:survey.age,code:''});
     const [selectedBirthDate, setSelectedBirthDate] = useState(Date);
 const title=useRef(survey.title)
 const [text,setText]=useState(survey.title)
@@ -26,11 +27,10 @@ const edit = async (e) => {
     // setEd(true)
     console.log("editSurvey");
         //e.preventDefault();
-    await updateFunc({_id:survey._id,title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,birthDate:selectedBirthDate}).then(refetch());
+    await updateFunc({_id:survey._id,title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages}).then(refetch());
     // type='edit'
 };
     
-
    const [addQuestionFunc,{isError3,error3,isSuccess3,data3}]=useAddQuestionMutation()
    
        const addQuestion=()=>{
@@ -64,20 +64,20 @@ const edit = async (e) => {
         { name: 'מסורתי', code: '15' }
 
     ];
-    const age = [
-        { name: "0-10", code: 10 },
-        { name: '10-20', code: 20 },
-        { name: "20-30", code: 30 },
-        { name: '30-40', code: 40 },
-        { name: "40-50", code: 50 },
-        { name: '50-60', code: 60 },
-        { name: "60-70", code: 70 },
-        { name: '70-80', code: 80 },
-        { name: "80-90", code: 90 },
-        { name: '90-100', code: 100 },
-        { name: "100-120", code: 120 }
-        ];
-
+    // const age = [
+    //     { name: "0-10", code: 10 },
+    //     { name: '10-20', code: 20 },
+    //     { name: "20-30", code: 30 },
+    //     { name: '30-40', code: 40 },
+    //     { name: "40-50", code: 50 },
+    //     { name: '50-60', code: 60 },
+    //     { name: "60-70", code: 70 },
+    //     { name: '70-80', code: 80 },
+    //     { name: "80-90", code: 90 },
+    //     { name: '90-100', code: 100 },
+    //     { name: "100-120", code: 120 }
+    //     ];
+const[ages,setAges]=useState(survey.age);
     const selectedCountryTemplate = (option, props) => {
         if (option) {
             return (
@@ -107,7 +107,7 @@ const edit = async (e) => {
         <div>
             <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" />
             <Button ref={toggleBtnRef} icon={icon} onClick={()=>{changeIcon();edit()}}/>&nbsp;&nbsp;
-            <InputText ref={title}onChange={(e)=>setText(e.value)} defaultValue={title.current.value}/>
+            <InputText ref={title}onChange={(e)=>setText(e.value)} defaultValue={title.current}/>
         </div>
             {/* <div>
             <Inplace style={{bottom:'90%', fontFamily:'monospace'}} closable closeIcon={'pi pi-save'} onClose={()=>{type=='add'?add():edit()}}>
@@ -118,15 +118,22 @@ const edit = async (e) => {
             </Inplace></div> */}
        </div>
        <div className="card flex justify-content-center">
-            <Dropdown value={selectedSex} onChange={(e) => setSelectedSex(e.value)} options={sex} optionLabel="name" placeholder="Select a sex" 
+            <Dropdown value={selectedSex} onChange={(e) => setSelectedSex(e.value)} options={sex} optionLabel="name" placeholder={selectedSex.name||"Select a sex" }
                 filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" />
         </div>  
-        <div className="card flex justify-content-center">
+        {/* <div className="card flex justify-content-center">
             <Dropdown value={selectedAge} onChange={async(e) => {setSelectedAge(e.value);await d.setFullYear(d.getFullYear()-(e.value.code));await setSelectedBirthDate(d); console.log(d)}} options={age} optionLabel="name" placeholder="Select a age" 
                 filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" />
-        </div> 
+        </div>  */}
         <div className="card flex justify-content-center">
-            <Dropdown value={selectedSector} onChange={(e) => setSelectedSector(e.value)} options={sector} optionLabel="name" placeholder="Select a sector" 
+            <div className="w-14rem">
+                <label>Select an ages range</label>
+                <InputText value={ages} onChange={(e) => setAges(e.target.value)} className="w-full" disabled/>
+                <Slider value={ages} onChange={(e) => setAges(e.value)} className="w-14rem" range step={10}min={0}max={120}/>
+            </div>
+        </div>
+        <div className="card flex justify-content-center">
+            <Dropdown value={selectedSector} onChange={(e) => setSelectedSector(e.value)} options={sector} optionLabel="name" placeholder={selectedSector.name||"Select a sector" }
                 filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" />
         </div>   
        

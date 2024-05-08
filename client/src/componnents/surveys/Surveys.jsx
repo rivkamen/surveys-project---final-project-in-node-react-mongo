@@ -183,7 +183,7 @@ const [status,setStatus]=useState(false)
                 visible={visible1} style={{ width: '50vw', height:'200vw' }} onHide={() => setVisible1(false)}>
         
                 <p className="m-0">
-                    <AddSurvey survey={{title:'', questions:[],answers:[]}} refetch={refetch} type={'add'}/>
+                    <AddSurvey survey={{title:'', questions:[],answers:[]}} setVisible1={setVisible1} refetch={refetch} type={'add'}/>
                 </p>
             </Dialog> 
             <ScrollTop />

@@ -1,8 +1,9 @@
 const Survey=require('../models/Survey')
 const addQuestion=async(req,res)=>{
-    const{_id,body}=req.body
-    console.log(body);
-    console.log(_id);
+    const{_id,body,answers}=req.body
+   
+    // console.log(body);
+    // console.log(_id);
 
     if(!body){
         console.log('not body');
@@ -15,8 +16,18 @@ const addQuestion=async(req,res)=>{
         console.log('not survey');
 
         return res.status(400).json({message:"Survey not foundd"})    }
+
     const arr=[...survey.questions,{body}]
+    let ind=arr.length-1;
     survey.questions=arr
+    if(answers)
+    {
+        if(survey.questions[ind].body===body)
+        {
+            answers.forEach(a => {addAnswer(_id,survey.questions[ind]._id,a)
+            });
+        }
+    }
         console.log(survey.questions);
     const updatesurvey= await survey.save()
     return res.status(200).json({success:true,
@@ -99,4 +110,7 @@ return res.status(201).json({success:true,
             message:`Question updated successfuly`
             })
 }
+
+
+
 module.exports={addQuestion,updateQuestion,deleteQuestion,chooseSeg}
