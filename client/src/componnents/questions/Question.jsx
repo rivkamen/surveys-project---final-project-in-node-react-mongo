@@ -13,7 +13,7 @@ import { useAddAnswerMutation } from '../answers/ansApiSlice';
 
 const Question=(props)=> {
 const {refetch,question,index,survey}=props
-let {questions,setQuestions}=props
+let {questions,setQuestions,newQuestions,setNewQuestions}=props
 const [addAnswerFunc,{isError:addAnswerIsError,error:addAnswerError,isSuccess:addAnswerIsSuccess,data:addAnswerData={}}]=useAddAnswerMutation()
  const addAnswer=()=>{
     questions[index].answers=[...questions[index].answers,{body:' '}];
@@ -101,7 +101,8 @@ console.log("22222222"+bodyQ.current.value);
             <div>
             <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" />
             {/* <Button ref={toggleBtnRef} icon={icon} onClick={()=>{update();changeIcon()}}/>&nbsp;&nbsp; */}
-            <InputText ref={bodyQ} onChange={()=>{if(questions){console.log(bodyQ.current); console.log(bodyQ.current.value);setQuestions(questions)/*;questions[index].body=bodyQ.current.value*/}}}defaultValue={bodyQ.current}/>
+
+            <InputText ref={bodyQ} onChange={()=>{if(questions){questions[index].body=bodyQ.current.value}}} defaultValue={bodyQ.current}/>
         </div>          
             </div> }>
                 {question?.answers?.map((a,i)=>

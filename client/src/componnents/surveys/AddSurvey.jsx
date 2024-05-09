@@ -236,15 +236,18 @@ const AddSurvey=(props)=>{
     }
     //const d=new Date()
     const sex = [
+        { name: 'לא מוגבל', code: '0' },
         { name: 'זכר', code: '1' },
         { name: 'נקבה', code: '2' }
     ];
-    const sector = [ 
+    const sector = [       
+         { name: 'לא מוגבל', code: '16' },
         { name: "דתי לאומי", code: '11' },
-        { name: 'חילוני', code: '12' },
-        { name: 'חרדי', code: '13' },
+        { name: 'חרדי', code: '12' },
+        { name: 'חילוני', code: '13' },
         { name: "לא משתייך", code: '14' },
         { name: 'מסורתי', code: '15' }
+
     ];
    
     const selectedCountryTemplate = (option, props) => {

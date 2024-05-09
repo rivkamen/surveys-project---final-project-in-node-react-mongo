@@ -1,7 +1,6 @@
 const Survey=require('../models/Survey')
 const addQuestion=async(req,res)=>{
     const{_id,body,answers}=req.body
-   
     // console.log(body);
     // console.log(_id);
 
@@ -17,17 +16,18 @@ const addQuestion=async(req,res)=>{
 
         return res.status(400).json({message:"Survey not foundd"})    }
 
-    const arr=[...survey.questions,{body}]
+    const arr=[...survey.questions,{body:body,answers:answers}]
     let ind=arr.length-1;
     survey.questions=arr
-    if(answers)
-    {
-        if(survey.questions[ind].body===body)
-        {
-            answers.forEach(a => {addAnswer(_id,survey.questions[ind]._id,a)
-            });
-        }
-    }
+    // if(answers)
+    // {
+    //     if(survey.questions[ind].body===body)
+    //     {
+    //         answers.forEach(a => {addAnswer(_id,survey.questions[ind]._id,a)
+    //         });
+    //     }
+    // }
+    console.log("survey#################################&&&&&&&&&&&&&&&&&&");
         console.log(survey.questions);
     const updatesurvey= await survey.save()
     return res.status(200).json({success:true,

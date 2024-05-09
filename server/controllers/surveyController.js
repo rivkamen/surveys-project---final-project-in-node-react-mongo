@@ -166,8 +166,9 @@ const getSurveyById=async(req,res)=>{
 }
 const updateSurvey=async(req,res)=>{
     const {_id,title,sex,sector,birthDate,age,questions}=req.body
-   console.log("yes i am");
-   sex?console.log(sex):console.log('!sex');;
+    
+   
+   sex?console.log(sex):console.log('!sex');
    const survey=await Survey.findById(_id).exec()
 
     if(!survey){
@@ -177,9 +178,7 @@ const updateSurvey=async(req,res)=>{
         if(title){
             survey.title=title
         }
-        
-        
-        if(sex){
+             if(sex){
             const arr=['זכר','נקבה'];
             const sexx=arr.find(s=>s==sex);
             if(!sexx)
@@ -200,8 +199,13 @@ const updateSurvey=async(req,res)=>{
         // }
         if(age)
             survey.age=age;
-        if(questions)
-            survey.questions=questions;
+        
+  
+        if(questions){
+        survey.questions=questions
+        
+      }
+
         const MyUpdatesurvey=await survey.save()
         return res.status(201).json({success:true,
             message:`survey ${survey.title}updated successfuly`,
