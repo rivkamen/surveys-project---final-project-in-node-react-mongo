@@ -12,12 +12,12 @@ import { useDeleteQuestionMutation, useUpdateQuestionMutation } from './questApi
 import { useAddAnswerMutation } from '../answers/ansApiSlice';
 
 const Question=(props)=> {
-const {refetch,question,index,survey}=props
-let {questions,setQuestions,newQuestions,setNewQuestions}=props
+const {refetch,question,survey}=props
+console.log(survey._id);
 const [addAnswerFunc,{isError:addAnswerIsError,error:addAnswerError,isSuccess:addAnswerIsSuccess,data:addAnswerData={}}]=useAddAnswerMutation()
+
  const addAnswer=()=>{
-    questions[index].answers=[...questions[index].answers,{body:' '}];
-       //addAnswerFunc({_id:survey._id,questionId:question._id,body:'enter answer'}).then(()=>refetch())
+       addAnswerFunc({_id:survey._id,questionId:question._id,body:'enter answer'}).then(()=>refetch())
     }
 const [updateQuestionFunc, {isError1, error1, isSuccess1,data1}] = useUpdateQuestionMutation()
     var [visible, setVisible] = useState(true);
@@ -25,21 +25,17 @@ const [updateQuestionFunc, {isError1, error1, isSuccess1,data1}] = useUpdateQues
     const update = (e) => {
         console.log("updateQuestion");
             //e.preventDefault();
+            console.log(question._id);
             updateQuestionFunc({_id:survey._id,questionId:question._id,body:text})};
 const [delFunc, {isError, error, isSuccess,data}] = useDeleteQuestionMutation()
     var [visible, setVisible] = useState(true);
 
     const delet = (e) => {
         console.log("delQuestion");
-        questions.splice(index,1);
-        refetch();
             //e.preventDefault();
-            // delFunc({_id:survey._id,questionId:question._id}).then(()=>refetch())
-        };
-        console.log("11111111"+question.body);
-const bodyQ=useRef(question.body)
-console.log("22222222"+bodyQ.current.value);
-
+            console.log(question._id);
+            delFunc({_id:survey._id,questionId:question._id}).then(()=>refetch())};
+const body=useRef('')
     const toast = useRef(null);
     //const router = useRouter();
     const [text, setText] = useState('');
@@ -58,9 +54,7 @@ console.log("22222222"+bodyQ.current.value);
             icon: 'pi pi-plus',
             command: async() => {
                 await addAnswer()
-                toast.current.show({ severity: 'info', summary: 'Add', detail: 'Data Added' });   
-                 refetch();
-
+                toast.current.show({ severity: 'info', summary: 'Add', detail: 'Data Added' });
             }
         },
         
@@ -70,8 +64,6 @@ console.log("22222222"+bodyQ.current.value);
             command: async() => {
                 await delet();
                 toast.current.show({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
-                refetch();
-
             }
         },
         // {
@@ -91,55 +83,32 @@ console.log("22222222"+bodyQ.current.value);
     ];
     return (
         <div className="card">
-             <div style={{ position: 'relative', bottom:'50px', left:'10%', width:'10px' }}>
-        <Toast ref={toast} />
-         <SpeedDial model={items} direction="right" showIcon='pi pi-ellipsis-v' hideIcon="pi pi-ellipsis-v" style={{ top: 'calc(50% - 2rem)',MozTabSize:'50px' }} />
-     
-     </div>
             <Accordion multiple activeIndex={[0]}>
-            <AccordionTab header={<div className="card">
-            <div>
-            <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" />
-            {/* <Button ref={toggleBtnRef} icon={icon} onClick={()=>{update();changeIcon()}}/>&nbsp;&nbsp; */}
 
-            <InputText ref={bodyQ} onChange={()=>{if(questions){questions[index].body=bodyQ.current.value}}} defaultValue={bodyQ.current}/>
-        </div>          
-            </div> }>
-                {question?.answers?.map((a,i)=>
+                <AccordionTab header={<div className="card">
+            <Inplace closable closeIcon={'pi pi-save'} onClose={update}>
+                <InplaceDisplay>{text || "Click to edit"}</InplaceDisplay>
+                <InplaceContent>
+                    <InputText placeholder={question.body} value={text} onChange={(e) => setText(e.target.value)}/>
+                </InplaceContent>
+            </Inplace>
+       
+
+                
+            <div style={{ position: 'relative', bottom:'50px', left:'10%', width:'10px' }}>
+                <Toast ref={toast} />
+                
+                <SpeedDial model={items} direction="right" style={{ top: 'calc(50% - 2rem)',MozTabSize:'50px' }} />
+            </div> </div> }>
+       
+                {addAnswerData?.answers?.map(a=>
                 <p className="m-0">
-                    <Answer question={question} questions={questions} qIndex={index} index={i} survey={survey} answer={a}refetch={refetch}/>
+                    <Answer question={question} survey={survey} refetch={refetch} answer={a}/>
                  </p> 
                   )}
              </AccordionTab>
              </Accordion>
         </div>
-        // <div className="card">
-        //     <Accordion multiple activeIndex={[0]}>
-
-        //         <AccordionTab header={<div className="card">
-        //     <Inplace closable closeIcon={'pi pi-save'} onClose={update}>
-        //         <InplaceDisplay>{text || "Click to edit"}</InplaceDisplay>
-        //         <InplaceContent>
-        //             <InputText placeholder={question.body} value={text} onChange={(e) => setText(e.target.value)}/>
-        //         </InplaceContent>
-        //     </Inplace>
-       
-
-                
-        //     <div style={{ position: 'relative', bottom:'50px', left:'10%', width:'10px' }}>
-        //         <Toast ref={toast} />
-                
-        //         <SpeedDial model={items} direction="right" style={{ top: 'calc(50% - 2rem)',MozTabSize:'50px' }} />
-        //     </div> </div> }>
-       
-        //         {addAnswerData?.answers?.map(a=>
-        //         <p className="m-0">
-        //             <Answer question={question} survey={survey} refetch={refetch} answer={a}/>
-        //          </p> 
-        //           )}
-        //      </AccordionTab>
-        //      </Accordion>
-        // </div>
     )
 }
 export default Question

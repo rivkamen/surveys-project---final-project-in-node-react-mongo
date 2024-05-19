@@ -15,21 +15,21 @@ const surveySchema=new mongoose.Schema({
         default:"creating"
     },
     
-        birthDate:{
-            type:Date,
-            immuteable:true
+        age:{
+            type:[Number],
+            default:[0,120]
         },
            
         sex:{
             type:String,
-            enum:["זכר","נקבה","לא נבחר"],
-            default:"לא נבחר"
+            enum:["זכר","נקבה","לא מוגבל"],
+            default:"לא מוגבל"
    
         },
         sector:{
             type:String,
-            enum:["חרדי","חילוני","דתי לאומי","מסורתי","לא משתייך","לא נבחר"],
-            default:"לא נבחר"
+            enum:["חרדי","חילוני","דתי לאומי","מסורתי","לא משתייך","לא מוגבל"],
+            default:"לא מוגבל"
             
         },
 

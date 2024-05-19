@@ -1,16 +1,28 @@
 const Survey = require("../models/Survey");
 const add=async(req,res)=>{
-    let {title,color} = req.body
+    console.log("add server");
+    let {title,sex,sector,age,questions} = req.body
     // sector=='h'?sector='חרדי':sector=='hi'?sector='חילוני':sector=='l'?sector='לא משתייך':sector=='m'?sector='מסורתי':sector=='d'?sector='דתי לאומי':sector=null;
     // sex=='m'?sex='זכר':sex=='f'?sex='נקבה':sex=null;
-
+console.log("survey");
     console.log("add survey");
     if (!title) {
         console.log('!title');
         return res.status(400).json({message:'required field is missing'})
         }
-    const survey = await Survey.create({title,color})
+    if(questions){questions.forEach(q => {
+        if(!q.body)
+            return res.status(409).json({message:"required"})
+        q.answers?.forEach(a=>{if(!a.body)  return res.status(409).json({message:"required"})}
+        )
+    })};
+    const survey = await Survey.create({title,sex,sector,age,questions})
     if(survey){
+        // if(questions)
+        // {
+        //    return questions.forEach(q => {addQuestionWithSurvey(survey,q.key,q.val,res)
+        //     });
+        // }
        return res.status(201).json({success:true,
             message:`survey ${survey.title}created successfuly`,
             data:survey
@@ -153,9 +165,10 @@ const getSurveyById=async(req,res)=>{
 
 }
 const updateSurvey=async(req,res)=>{
-    const {_id,title,color,sex,sector,birthDate}=req.body
-   console.log("yes i am");
-   sex?console.log(sex):console.log('!sex');;
+    const {_id,title,sex,sector,birthDate,age,questions}=req.body
+    
+   
+   sex?console.log(sex):console.log('!sex');
    const survey=await Survey.findById(_id).exec()
 
     if(!survey){
@@ -165,11 +178,7 @@ const updateSurvey=async(req,res)=>{
         if(title){
             survey.title=title
         }
-        
-        if(color){
-            survey.color=color;
-        }
-        if(sex){
+             if(sex){
             const arr=['זכר','נקבה'];
             const sexx=arr.find(s=>s==sex);
             if(!sexx)
@@ -184,10 +193,19 @@ const updateSurvey=async(req,res)=>{
             return res.status(401).json({message:"status is not valid"})
         survey.sector=sector
         }
-        if(birthDate){
-            console.log('*****************'+birthDate);
-            survey.birthDate=birthDate
-        }
+        // if(birthDate){
+        //     console.log('*****************'+birthDate);
+        //     survey.birthDate=birthDate
+        // }
+        if(age)
+            survey.age=age;
+        
+  
+        if(questions){
+        survey.questions=questions
+        
+      }
+
         const MyUpdatesurvey=await survey.save()
         return res.status(201).json({success:true,
             message:`survey ${survey.title}updated successfuly`,
