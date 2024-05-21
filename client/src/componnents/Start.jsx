@@ -9,11 +9,12 @@ import { useDispatch } from 'react-redux';
 import { Navigate, useNavigate,NavLink } from 'react-router-dom';
 import UsersNavBar from './users/UsersNavBar';
 import { useGetUserQuery } from './users/usersApiSlice';
+import NavBar from './NavBar';
 
 //import { useNavigate } from 'react-router-dom';
 //z6o1f2n5a8t8p2a5a5n3e1a7h
-const Start=()=>{
-
+const Start=(props)=>{
+const{setRol}=props
     const username=useRef()
     const password=useRef()
     const[register,setRegister]=useState(false)
@@ -33,14 +34,17 @@ const Start=()=>{
         useEffect(()=>{
         if(isSuccess){
         dispatch(setToken(data))
-            if(userIsSuccess)
-            myUser.roles=='admin'?navigate('/NavBar'):navigate('/UsersNavBar')
-            //navigate('/UsersNavBar')
-        // {<UsersNavBar/>}
-        // setLoginSuccess(true)
+             if(userIsSuccess)
+             {
+                myUser.roles==='admin'?setRol(2):setRol(1)}
+    // <NavBar role={myUser.roles}/>}
+//             myUser.roles=='admin'?navigate('/NavBar'):navigate('/UsersNavBar')}
         
-console.log(data.password);
-      //navigate(data.roles==='admin'?'/Surveys':'UsersNavBar')
+//             // navigate('/UsersNavBar')
+//             // {<UsersNavBar/>}
+//             setLoginSuccess(true)
+// console.log(data.password);
+//     //   navigate(data.roles==='admin'?'/Surveys':'UsersNavBar')
     }
     else{
 
@@ -59,6 +63,7 @@ console.log(data.password);
         <>
         
         <div className="card" >
+            {console.log("start")}
             <div className="flex flex-column md:flex-row" style={{marginTop:'100px'}}>
                 <div className="w-full md:w-5 flex flex-column align-items-center justify-content-center gap-3 py-5">
                     <div className="flex flex-wrap justify-content-center align-items-center gap-2">
@@ -84,7 +89,7 @@ console.log(data.password);
                     <Button label="Sign Up" icon="pi pi-user-plus" severity="success" className="w-10rem" onClick={()=>{setRegister(true)}}></Button>
                     
                     {register && <Register/>}
-                    
+                    {/* {isSuccess && <NavBar/>} */}
                 </div>
             </div>
             {/* {loginSuccess && <UsersNavBar/>} */}

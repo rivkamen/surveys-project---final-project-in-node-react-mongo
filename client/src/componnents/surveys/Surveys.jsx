@@ -113,6 +113,8 @@ const [status,setStatus]=useState(false)
         return ( 
             
             <div className="col-12" key={survey.id}>
+
+                 
                
                 <div className={classNames('flex flex-column xl:flex-row xl:align-items-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
                     {/* <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={`https://primefaces.org/cdn/primereact/images/survey/${survey.image}`} alt={survey.name} /> */}
@@ -143,7 +145,7 @@ const [status,setStatus]=useState(false)
                         <Button icon="pi pi-chart-bar" className="p-button-rounded" style={{color:'#10bbbb', backgroundColor:'#e5e7eb'}}  disabled={survey.status != 'closed'}></Button>
 
                             <Button  onClick={()=>{setVisible(true); setCurrentSurvey(survey)}} icon="pi pi-file-edit" className="p-button-rounded"  style={{color:'#10bbbb', backgroundColor:'#e5e7eb'}}  disabled={survey.status != 'creating'}></Button>
-                            <Button onClick={()=>{setDel(true);setCurrentSurvey(survey)}} icon="pi pi-times" className="p-button-rounded" style={{color:'#10bbbb', backgroundColor:'#e5e7eb'}}  disabled={survey.status === 'in process'}></Button>
+                            <Button onClick={()=>{setDel(true);setCurrentSurvey(survey)}} icon="pi pi-times" label="מחק סקר"className="p-button-rounded" style={{color:'#10bbbb', backgroundColor:'#e5e7eb'}}  disabled={survey.status === 'in process'}></Button>
                             <Button onClick={()=>{setStatus(true);setCurrentSurvey(survey)}} icon="pi pi-lock" className="p-button-rounded" style={{color:'#10bbbb', backgroundColor:'#e5e7eb'}}/*disabled={survey.status === 'in process'}*/></Button>
 
 
@@ -171,16 +173,20 @@ const [status,setStatus]=useState(false)
     };
     if (isLoading) return <h1>Loading</h1>
     if(isError) return <h2>{error}</h2>
-    return (
-        <div className="cardSurvey">
+    return (<div className="cardSurvey">
+
+        <div style={{ display: 'flex' }}>
+      <div style={{ flex: 1 ,width:'80%' }}>
             {/* <div className="card flex flex-column align-items-center" style={{ height: '2000px' }}>
         </div> */}
             
-            <Button  onClick={()=>{setVisible1(true); /*setCurrentSurvey(survey)*/}} icon="pi pi-plus" className="p-button-rounded"  style={{color:'#10bbbb', backgroundColor:'#e5e7eb'}}></Button>
+            <Button onClick={()=>{setVisible1(true); /*setCurrentSurvey(survey)*/}} icon="pi pi-plus"  className="p-button-rounded"  style={{color:'#10bbbb', backgroundColor:'#e5e7eb', position:'fixed'}}label="&nbsp;סקר חדש&nbsp;"></Button>
+            </div> {/* This is the menu */}
+      <div style={{ flex: 2, textAlign: 'center',width:'20%' }}>{/* This is the content */}
             {surveys.map((s)=><SurveyItem refetch ={refetch} survey={s}/>)}
             
               <Dialog 
-                visible={visible1} style={{ width: '50vw', height:'200vw' }} onHide={() => setVisible1(false)}>
+                visible={visible1} style={{ width: '60vw', height:'200vw' }} onHide={() => setVisible1(false)}>
         
                 <p className="m-0">
                     <AddSurvey survey={{title:'', questions:[],answers:[]}} setVisible1={setVisible1} refetch={refetch} type={'add'}/>
@@ -188,7 +194,8 @@ const [status,setStatus]=useState(false)
             </Dialog> 
             <ScrollTop />
 
-
+            </div>
+    </div>
             
         </div>
         

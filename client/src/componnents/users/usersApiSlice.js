@@ -42,8 +42,16 @@ deleteUser: build.mutation({
     }),
     invalidatesTags:["Users"]
 }),
+addUserSurvey: build.mutation({
+    query: (user) =>({
+    url: "/api/users/surveys",
+    method: "PUT",
+    body: user
+    }),
+    invalidatesTags:["Users"]
+}),
 
 })
 })
-export const {useGetUsersQuery,useGetUserQuery, useAddUserMutation,useUpdateUserMutation,useDeleteUserMutation}=UsersApiSlice
+export const {useGetUsersQuery,useGetUserQuery, useAddUserMutation,useUpdateUserMutation,useDeleteUserMutation,useAddUserSurveyMutation}=UsersApiSlice
 

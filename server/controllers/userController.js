@@ -106,6 +106,26 @@ const UpdateUser=async(req,res)=>{
 return res.status(405).json({message:"unaouthorised"})
 
 }
+// const updateUserSurvey=async(req,res)=>{
+//     const {_id,survey}=req.body
+//     console.log("11111");
+//     const user=await User.findById(_id).exec()
+//     if(!user){
+//         return res.status(401).json({message:"not found"})
+//         }
+//         if(user._id==req.user._id){
+//             if(survey){
+//                 user.surveys=[...surveys,survey._id]
+//             }
+//             const MyUpdateUser=await user.save()
+//             return res.status(201).json({success:true,
+//                 message:`user ${user.name}updated successfuly`,
+//                 })
+//         }
+    
+//     return res.status(405).json({message:"unaouthorised"})
+    
+// }
 const deleteUser=async(req,res)=>{
     const {_id}=req.body
     const user=await User.findById(_id).exec()

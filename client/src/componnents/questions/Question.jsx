@@ -10,6 +10,8 @@ import { InputText } from 'primereact/inputtext';
 import { Inplace, InplaceDisplay, InplaceContent } from 'primereact/inplace';
 import { useDeleteQuestionMutation, useUpdateQuestionMutation } from './questApiSlice';
 import { useAddAnswerMutation } from '../answers/ansApiSlice';
+import { AutoComplete } from 'primereact/autocomplete';
+import { Divider } from 'primereact/divider';
 
 const Question=(props)=> {
 const {refetch,question,index,survey}=props
@@ -17,6 +19,7 @@ let {questions,setQuestions,newQuestions,setNewQuestions}=props
 const [addAnswerFunc,{isError:addAnswerIsError,error:addAnswerError,isSuccess:addAnswerIsSuccess,data:addAnswerData={}}]=useAddAnswerMutation()
  const addAnswer=()=>{
     questions[index].answers=[...questions[index].answers,{body:' '}];
+    refetch()
        //addAnswerFunc({_id:survey._id,questionId:question._id,body:'enter answer'}).then(()=>refetch())
     }
 const [updateQuestionFunc, {isError1, error1, isSuccess1,data1}] = useUpdateQuestionMutation()
@@ -36,8 +39,9 @@ const [delFunc, {isError, error, isSuccess,data}] = useDeleteQuestionMutation()
             //e.preventDefault();
             // delFunc({_id:survey._id,questionId:question._id}).then(()=>refetch())
         };
-        console.log("11111111"+question.body);
-const bodyQ=useRef(question.body)
+        console.log("11111111");
+        console.log(question.body.value);
+const bodyQ=useRef(question.body!=' '?question.body:"שאלה חדשה")
 console.log("22222222"+bodyQ.current.value);
 
     const toast = useRef(null);
@@ -92,19 +96,22 @@ console.log("22222222"+bodyQ.current.value);
     return (
         <div className="card">
              <div style={{ position: 'relative', bottom:'50px', left:'10%', width:'10px' }}>
-        <Toast ref={toast} />
-         <SpeedDial model={items} direction="right" showIcon='pi pi-ellipsis-v' hideIcon="pi pi-ellipsis-v" style={{ top: 'calc(50% - 2rem)',MozTabSize:'50px' }} />
-     
+        {/* <Toast ref={toast} /> */}
+         {/* <SpeedDial model={items} direction="right" showIcon='pi pi-ellipsis-v' hideIcon="pi pi-ellipsis-v" style={{ top: 'calc(50% - 2rem)',MozTabSize:'50px' }} /> */}
+         
      </div>
-            <Accordion multiple activeIndex={[0]}>
-            <AccordionTab header={<div className="card">
-            <div>
+            <Accordion multiple activeIndex={[0]} style={{width:'100%'}}>
+            <AccordionTab  header={question.body!=' '?question.body:"שאלה חדשה"}> 
+            <div dir="rtl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Button  label="&nbsp; הוסף תשובה " icon='pi pi-plus'rounded  onClick={addAnswer}> </Button> &nbsp;
+          <Button label="&nbsp; מחק שאלה" icon='pi pi-trash' rounded onClick={delet} style={{color:'#10bbbb', backgroundColor:'#e5e7eb'}}></Button> </div>
+           
+            <div className="card p-fluid p-inputtext-lg" dir='rtl'>
             <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" />
             {/* <Button ref={toggleBtnRef} icon={icon} onClick={()=>{update();changeIcon()}}/>&nbsp;&nbsp; */}
 
-            <InputText ref={bodyQ} onChange={()=>{if(questions){questions[index].body=bodyQ.current.value}}} defaultValue={bodyQ.current}/>
+            <InputText ref={bodyQ}  defaultValue={bodyQ.current} onChange={()=>{if(questions){questions[index].body=bodyQ.current.value}}}/>
         </div>          
-            </div> }>
+        <Divider></Divider>
                 {question?.answers?.map((a,i)=>
                 <p className="m-0">
                     <Answer question={question} questions={questions} qIndex={index} index={i} survey={survey} answer={a}refetch={refetch}/>

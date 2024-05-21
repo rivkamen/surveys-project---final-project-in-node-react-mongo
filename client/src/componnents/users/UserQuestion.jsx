@@ -22,34 +22,56 @@ console.log(bodyAnswers[0].key);
 
 const categories = bodyAnswers
     return (
-        <div className="card">
+        // <div className="card">
            
-              <div className="flex flex-wrap gap-3">
-            <h3>{question.body} </h3>
-        </div>
+        //       <div className="flex flex-wrap gap-3">
+        //     <h3>{question.body} </h3>
+        // </div>
            
                
                    
-                     {categories.map((category) => {
-                    return ( <span classclassName="p-input-icon-left">
+        //              {categories.map((category) => {
+        //             return ( 
+        //             <span classclassName="p-input-icon-left">
            
-                    <Card>
-                      <div key={category.key} className="flex align-items-center">
-                      
+        //             <Card>
+                     
+        //               <div  key={category.key} dir='rtl'  className="flex align-items-center" style={{ position: 'sticky', top: 200,fontFamily:'Yehuda CLM'}}>
 
-                        {console.log('cccccccc'+category.key)}
-                            <RadioButton inputId={category.key} name="category" value={category.key} onChange={(e) =>{select[index].select=e.value; setSelectedCategory(e.value.checked);setSelect(select)}} checked={selectedCategory===category.key}/>
-                            <label htmlFor={category.key} className="ml-2">{category.name}</label>
-                        </div></Card>
+        //                 {console.log('cccccccc'+category.key)}
+        //                     <RadioButton inputId={category.key} name="category" value={category.key} onChange={(e) =>{select[index].select=e.value; setSelectedCategory(e.value.checked);setSelect(select)}} checked={selectedCategory===category.key}/>
+        //                     <label htmlFor={category.key} className="ml-2">{category.name}</label>
+        //                 </div></Card>
               
        
                    
-               </span>
+        //        </span>
                         
+        //             );
+        //         })}
+           
+        // </div>
+
+
+        <div className="card">  
+              <div className="card flex justify-content-center">
+            <h3>{question.body} </h3>
+        </div>
+           
+        {categories.map((category) => {
+                    return (
+                        <span classclassName="p-input-icon-left">  
+                            <Card>
+                                <div key={category.key} className="flex align-items-center">
+                                        <RadioButton inputId={category.key} name="category" value={category.key} onChange={(e) =>{select[index].select=e.value;setSelect(select);setSelectedCategory(e.value);console.log(selectedCategory);}} 
+                                        checked={selectedCategory=== category.key} />
+                                        <label htmlFor={category.key} className="ml-2">{category.name}</label>
+                                </div>
+                            </Card>
+                        </span>               
                     );
                 })}
-           
-        </div>
+                  </div>
     )
 }
 export default UserQuestion
