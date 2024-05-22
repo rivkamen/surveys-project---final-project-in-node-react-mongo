@@ -7,7 +7,7 @@ import { useGetSurveysQuery } from '../surveys/surveysApiSlice';
 import UserSurvey from './UserSurvey';
 import { Dialog } from 'primereact/dialog';
 
-import SurveyItem from './UserSurveyItem';
+import UserSurveyItem from './UserSurveyItem';
 import { useGetUserQuery } from './usersApiSlice';
 const UserSurveys=(props)=>{
    
@@ -45,7 +45,7 @@ const y2=new Date().getFullYear()
 const age=(y2-y1)
 // console.log(Date.now()-myUser?.birthDate,'333333333333333333');
 console.log(`${y1} & ${y2} & ${age} &${myUser?.birthDate}`);
-filteredSurveys=surveys?.filter(s=>s.sex==myUser?.sex || s.sex=='לא מוגבל' && s.sector==myUser.sector || s.sector=='לא מוגבל' && s.age[0]<=age&&s.age[1]>=age||s.age=='')
+filteredSurveys=surveys?.filter(s=>(s.sex==myUser?.sex || s.sex=='לא מוגבל' && s.sector==myUser.sector || s.sector=='לא מוגבל' && s.age[0]<=age&&s.age[1]>=age||s.age=='' ) && !myUser.surveys.find(u=>u._id===s._id;console.log(u._id); console.log(s._id)==-1;)
 //filteredSurveys=surveys?.filter(s=>s.sex==myUser.sex || s.sex==''||s.sex==undefined && s.sector==myUser.sector || s.sector=='' ||s.sector==undefined && s.birthDate>=myUser.birthDate||s.birthDate=='' || s.birthDate==undefined)
 const [visible1,setVisible1]=useState(false)
 
@@ -56,7 +56,7 @@ const [visible1,setVisible1]=useState(false)
     return (
         <div className="cardSurvey" >
            
-            {filteredSurveys?.map((s)=><SurveyItem refetch ={refetch} survey={s}/>)}
+            {filteredSurveys?.map((s)=><UserSurveyItem user={myUser} refetch ={refetch} survey={s}/>)}
             
                
             <ScrollTop />

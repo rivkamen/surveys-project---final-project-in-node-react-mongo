@@ -14,7 +14,7 @@ import { useChangeStatusMutation } from '../surveys/surveysApiSlice';
 import { Card } from 'primereact/card';
 
 const UserSurveyItem=(props)=> {
-    const {survey,refetch}=props
+    const {survey,refetch,user}=props
     const [visible,setVisible]=useState(false)
     const [del,setDel]=useState(false)
     
@@ -64,7 +64,7 @@ const UserSurveyItem=(props)=> {
             header={survey.title} 
             visible={visible} style={{ width: '50vw', height:'100vw' }} onHide={() => setVisible(false)}>
             <p className="m-0">
-                <UserSurvey visible={visible}  setVisible={setVisible} refetch={refetch} survey={survey}/>
+                <UserSurvey user={user} visible={visible}  setVisible={setVisible} refetch={refetch} survey={survey}/>
             </p>
         </Dialog>
 

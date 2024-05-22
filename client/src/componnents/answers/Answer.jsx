@@ -6,6 +6,7 @@ import { InputText } from 'primereact/inputtext';
 import { Inplace, InplaceContent, InplaceDisplay } from 'primereact/inplace';
 import {useDeleteAnswerMutation, useUpdateAnswerMutation} from './ansApiSlice'
 import { StyleClass } from 'primereact/styleclass';
+import { AutoComplete } from 'primereact/autocomplete';
 const Answer=(props)=> {
     const {survey,question,index,qIndex,answer,refetch}=props
     let {questions}=props
@@ -70,10 +71,13 @@ const Answer=(props)=> {
     const startContent = (
         <span classclassName="p-input-icon-left">
             {/* <i classclassName="pi pi-search" /> */}
-            <Button icon='pi pi-trash' rounded onClick={delet}></Button>
+            {/* <Button icon='pi pi-trash' rounded onClick={delet}></Button> */}
         </span>
     );
-    const answeRef = useRef(answer.body);
+    const answeRef = useRef(answer.body!=' '?answer.body:"תשובה חדשה");
+        console.log(answeRef.current);
+        console.log(answer.body);
+
     let [icon,setIcon] =useState('pi pi-save')
     const changeIcon=()=>{
         icon==='pi pi-save'?setIcon('pi pi-send'):setIcon('pi pi-save')
@@ -81,11 +85,11 @@ const Answer=(props)=> {
     const centerContent = (
         <span classclassName="p-input-icon-left">
             {/* <i classclassName="pi pi-search" /> */}
-            <div>
-            {/* <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" /> */}
-            {/* <Button ref={toggleBtnRef} icon={icon} onClick={()=>{update();changeIcon()}}/>&nbsp;&nbsp; */}
-            <InputText ref={answeRef} defaultValue={answeRef.current} onChange={()=>{questions[qIndex].answers[index].body=answeRef.current.value}}/>
-        </div>
+            {/* <div className="card p-fluid p-inputtext-lg" dir='rtl'>
+           
+            <AutoComplete ref={answeRef} defaultValue={answeRef.current} onChange={()=>{questions[qIndex].answers[index].body=answeRef.current.value}}/>
+            {/* <InputText ref={answeRef} defaultValue={answeRef.current} onChange={()=>{questions[qIndex].answers[index].body=answeRef.current.value}}/> */}
+        {/* </div> */} 
         </span>
     );
 
@@ -96,9 +100,14 @@ const Answer=(props)=> {
     );
 
     return (
-        <div className="card">
-            <Toolbar start={startContent} center={centerContent} end={endContent} /> 
+             <div className="flex flex-center card p-fluid p-inputtext-lg" dir='rtl'>
+           <div style={{width:'80%'}}>
+           <InputText ref={answeRef} defaultValue={answeRef.current} /*value={answeRef.current}*/ /*placeholder={answeRef.current}*/ onChange={()=>{questions[qIndex].answers[index].body=answeRef.current.value}}/></div>
+           <Button icon='pi pi-trash'  onClick={delet}></Button>
+           {/* <InputText ref={answeRef} defaultValue={answeRef.current} onChange={()=>{questions[qIndex].answers[index].body=answeRef.current.value}}/> */}
+           {/* <Toolbar start={startContent} center={centerContent} end={endContent} />  */}
         </div>
+            
     );
 }
 export default Answer

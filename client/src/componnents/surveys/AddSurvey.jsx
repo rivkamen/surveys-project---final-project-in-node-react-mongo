@@ -167,7 +167,7 @@
 // import { useAddSurveyMutation, useChangeStatusMutation, useUpdateSurveyMutation } from "./surveyApiSlice"
 // import { useAddQuestionMutation } from "./questions/questionApiSlice"
 // import { Slider } from "primereact/slider"
-
+import { classNames } from 'primereact/utils';
 import { Button } from "primereact/button"
 import { useRef, useState } from "react"
 import { useAddQuestionMutation } from "../questions/questApiSlice"
@@ -180,75 +180,95 @@ import { InputText } from "primereact/inputtext"
 import { Dropdown } from 'primereact/dropdown';
 import { StyleClass } from "primereact/styleclass"
 import { Slider } from "primereact/slider"
+import { Message } from "primereact/message"
+import { Toast } from "primereact/toast"
+import { useFormik } from 'formik';
+import { AutoComplete } from 'primereact/autocomplete';
+import SendSurvey from './SendSurvey';
+import { PanelMenu } from 'primereact/panelmenu';
+import { Accordion, AccordionTab } from 'primereact/accordion';
 
 const AddSurvey=(props)=>{
     const {refetch,setVisible1}=props
     let [questions,setQuestions]=useState([]); 
     const [ed,setEd]=useState(false)
     const [quest,setQuest]=useState(false) 
-    const [selectedSex, setSelectedSex] = useState({name:null,code:''})
-    const [selectedSector, setSelectedSector] = useState({name:null,code:''})
+    const [selectedSex, setSelectedSex] = useState()
+    const [selectedSector, setSelectedSector] = useState()
   //const [selectedAge, setSelectedAge] = useState({name:null,code:''});
     const [selectedBirthDate, setSelectedBirthDate] = useState(Date)
-    const title=useRef('')
+    const title=useRef('סקר ללא שם')
     const [text,setText]=useState('')
-    const [ableTo,setAbleTo]=useState(true)
+    const [send,setSend]=useState(false)
     const [addSurveyFunc,{data:survey={},isError:addSurveyIsError,error:addSurveyError,isSuccess:addSurveyIsSuccess}]=useAddSurveyMutation()
     const [addQuestionFunc,{isError:addQuestionIsError,error:addQuestionError,isSuccess:addQuestionIsSuccess,data:surveyQuestion}]=useAddQuestionMutation()
-    const [changeStatusFunc, {isError:changeStatusIsError, error:changeStatusError, isSuccess:changeStatusIsSuccess,data:changeStatus}] =useStatusSurveyMutation()
+    // const [changeStatusFunc, {isError:changeStatusIsError, error:changeStatusError, isSuccess:changeStatusIsSuccess,data:changeStatus}] =useStatusSurveyMutation()
     const [updateSurveyFunc, {isError:updateSurveyIsError, error:updateSurveyError, isSuccess:updateSurveyIsSuccess,data:updatesurvey}] = useUpdateSurveyMutation()
-    const [ages, setAges] = useState([0,120]);
 
     const add = async (e) => { 
     //    let quest=[{body:"try",answers:[{body:"catch"}]},{body:"tryagain",answers:[{body:"catchagain"}]}]
-        console.log("add");    //e.preventDefault();         
-       await addSurveyFunc({title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages,questions:questions}).then(()=>refetch())
+        console.log("add");    //e.preventDefault();  
+       
+
+       
+       await addSurveyFunc({title:text,sex:selectedSex,sector:selectedSector,age:ages,questions:questions}).then(()=>refetch())
        //await updateSurveyFunc({_id:survey?.data?._id,title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages}).then(()=>refetch())
     }
-    const edit = async (e) => {
-                //e.preventDefault();
-                console.log(selectedSex.name);
-            await updateSurveyFunc({_id:survey?.data?._id,title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages}).then(()=>refetch()) 
-        }
-    const changestatus = (e) => {
-      // e.preventDefault();
-       changeStatusFunc({_id:survey.data._id,status:"in process"}).then(()=>refetch())
-       }
+
+    const toastCenter = useRef(null);
+    const showMessage = (event, ref, severity) => {
+        const label = event.target.innerText;
+        ref.current.show({ severity: severity, summary: "שדה חובה", detail: "שדה כותרת הינו שדה חובה", life: 3000 });
+    };
+    // const edit = async (e) => {
+    //             //e.preventDefault();
+                
+
+    //         await updateSurveyFunc({_id:survey?.data?._id,title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages}).then(()=>refetch()) 
+    //     }
+    // const changestatus = async (e) => {
+    //     // await addSurveyFunc({title:title.current.value,sex:selectedSex.name,sector:selectedSector.name,age:ages,questions:questions}).then(()=>
+    //    changeStatusFunc({_id:survey?.data?._id,status:"in process"}).then(()=>refetch())
+    //    }
 
     const addQuestion=async()=>{
-        setQuestions([...questions,{body:" ",answers:[{body:" "}]}])
+        setQuestions([...questions,{body:"שאלה חדשה",answers:[{body:"תשובה חדשה"}]}])
       //  <Question question={questions} /*survey={surveyQuestion.data} */ refetch={refetch}/>
         // await addQuestionFunc({_id:survey.data._id,body:'enter question'}).then(()=>refetch())
         // console.log(survey?.data?.questions);
         // setQuest(true)
     }
     
-   
-
-    const toggleBtnRef = useRef(null);
-    let [icon,setIcon] =useState('pi pi-save')
-    const changeIcon=()=>{
-        icon==='pi pi-save'?setIcon('pi pi-send'):setIcon('pi pi-save')
-    }
-    const checkType=()=>{
-        ed===false?add():edit()
-        changeIcon()
-    }
-    //const d=new Date()
+  
     const sex = [
-        { name: 'לא מוגבל', code: '0' },
-        { name: 'זכר', code: '1' },
-        { name: 'נקבה', code: '2' }
+        { label: 'לא מוגבל',icon:'pi pi-circle',command:()=>{setSelectedSex('לא מוגבל')} },
+        { label: 'זכר',command:()=>{setSelectedSex('זכר')} },
+        { label: 'נקבה',command:()=>{setSelectedSex('נקבה')}}
     ];
-    const sector = [       
-         { name: 'לא מוגבל', code: '16' },
-        { name: "דתי לאומי", code: '11' },
-        { name: 'חרדי', code: '12' },
-        { name: 'חילוני', code: '13' },
-        { name: "לא משתייך", code: '14' },
-        { name: 'מסורתי', code: '15' }
+    const sector = [
+        { label: 'לא מוגבל',command:()=>{setSelectedSector('לא מוגבל')} },
+        { label: 'לא משתייך',command:()=>{setSelectedSector('לא משתייך')} },
+        { label: 'מסורתי',command:()=>{setSelectedSector('מסורתי')}},
+        { label: 'חרדי',command:()=>{setSelectedSector('חרדי')}},
+        { label: 'חילוני',command:()=>{setSelectedSector('חילוני')}},
+        { label: 'דתי לאומי',command:()=>{setSelectedSector('דתי לאומי')}}
+       
+       
+    ];
+    const [ages, setAges] = useState([0,120]);
+    const items = [
+        {
+            label: selectedSex||'מגדר',
+            icon: 'pi pi-user',
+            items: sex,
+        },
+        {
+            label: selectedSector||'מגזר',
+            icon: 'pi pi-tag',
+            items: sector
+        }
+    ]
 
-    ];
    
     const selectedCountryTemplate = (option, props) => {
         if (option) {
@@ -271,35 +291,79 @@ const AddSurvey=(props)=>{
             </div>
         );
     };
+
+    /***************************************************************************************************************************** */
+    const formik = useFormik({
+        initialValues: {
+           title:survey.title
+            
+        },
+        validate: (data) => {
+            let errors = {};
+
+            if (!data.title){
+                errors.title = 'שדה חובה';
+            }
+           
+            return errors;
+        },
+        onSubmit: async() => {
+           console.log('onSubmit');
+            await add();
+            await setSend(true);
+            refetch();
+
+        }
+    });
+    const isFormFieldInvalid = (name) => !!(formik.touched[name] && formik.errors[name]);
+
+const getFormErrorMessage = (name) => {
+return isFormFieldInvalid(name) ?  <small className="p-error">{formik.errors[name]}</small> : <small className="p-error">&nbsp;</small>;
+};
+/********************************************************************************************************************************** */
     return(
-        <>
-        <div className="card" >
-        <div>
-            {/* <StyleClass nodeRef={toggleBtnRef} selector="@next" toggleClassName="p-disabled" />
-            <Button ref={toggleBtnRef} icon={icon} onClick={()=>{icon==='pi pi-save'?checkType():changeIcon()}}/>&nbsp;&nbsp; */}
-            <InputText ref={title} onChange={(e)=>setText(e.value)} defaultValue={title.current.value}/>
+        <> 
+            <div className="card p-fluid p-inputtext-lg" dir="rtl" style={{position:'sticky',top:0,zIndex:100,fontFamily:'Yehuda CLM'}}>
+            <h2>שם הסקר</h2>
+        <AutoComplete ref={title} defaultValue={title.current||'סקר ללא שם'} 
+        value={formik.values.title} /*placeholder={title.current}*/
+        name='title'
+                     className={classNames({ 'p-invalid': isFormFieldInvalid('title') })}
+                     onChange={(e) => {
+                        console.log(title.current);
+                        setText(e.value)
+                         formik.setFieldValue('title', e.value);
+                     }}
+                 />
+                 {getFormErrorMessage('title')}           
         </div>
-        <div className="card flex justify-content-center">
-            <Dropdown value={selectedSex} onChange={(e) => setSelectedSex(e.value)} options={sex} optionLabel="name" placeholder="Select a sex" 
-                filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" />
-        </div>  
-        <div className="card flex justify-content-center">
-            <div className="w-14rem">
-                <label>Select an ages range</label>
+       <div style={{ display: 'flex' }}>
+
+     <div style={{ position: 'sticky', top: 200, height: '0vh', width: '300px',fontFamily:'Yehuda CLM'}}>
+        <h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?למי מיועד הסקר</h2>
+        
+         <PanelMenu model={items} className="w-full md:w-20rem"></PanelMenu>
+         <Accordion className="w-full md:w-20rem">
+    <AccordionTab header={<div><i className='pi pi-sort-numeric-up-alt'></i>&nbsp;&nbsp;גיל</div>}>
+            <div>
                 <InputText value={ages} onChange={(e) => setAges(e.target.value)} className="w-full" disabled/>
-                <Slider value={ages} onChange={(e) => setAges(e.value)} className="w-14rem" range step={10}min={0}max={120}/>
+                <Slider value={ages} onChange={(e) => setAges(e.value)} className="w-17.5rem" range step={10}min={0}max={120}/>
             </div>
-        </div> 
-        <div className="card flex justify-content-center">
-            <Dropdown value={selectedSector} onChange={(e) => setSelectedSector(e.value)} options={sector} optionLabel="name" placeholder="Select a sector" 
-                filter valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} className="w-full md:w-14rem" />
+    </AccordionTab>
+    </Accordion>
+    <br/><br/>
+    
+    <Button label="הוסף שאלה" onClick={async()=>{addQuestion()}} icon="pi pi-plus" rounded style={{width:'50%',color:'#10bbbb', backgroundColor:'#e5e7eb',marginLeft:'19%'}}/> {/* This is the menu */}
+    <br/><br/>
+    <Button label="שמור סקר" type='submit' onClick={formik.handleSubmit /*setSend(true)*/} icon="pi pi-save" rounded style={{width:'50%',color:'#10bbbb', backgroundColor:'#e5e7eb',marginLeft:'19%'}}/> 
         </div>
-       </div>
-        {/*surveyQuestion?.data?.*/questions?.map((q,i)=><Question question={q} questions={questions} index={i} refetch={refetch}/>)} 
-       {console.log()}
-        <Button disabled={text!=null} onClick={()=>{addQuestion()}} icon="pi pi-plus" rounded /> 
-        <Button disabled={text!=null} onClick={()=>{changestatus();setVisible1(false)}} icon="pi pi-send" rounded/> 
-        <Button disabled={text!=null} onClick={async()=>{await add(); setVisible1(false)}} icon="pi pi-save" rounded /> 
+        
+      <div style={{ flex: 1, textAlign: 'center' }}> 
+        {questions?.map((q,i)=><Question question={q} questions={questions} index={i} refetch={refetch}/>)} 
+
+{send && <SendSurvey visible={send} setVisible={setSend} setVisibleS={setVisible1} refetch={refetch} survey={survey}/>}
+</div> 
+</div> 
 
         </>
     )

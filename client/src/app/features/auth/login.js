@@ -11,7 +11,7 @@ useLoginMutation()
 useEffect(()=>{
 if(isSuccess){
 dispatch(setToken(data))
-navigate("./homePage")
+// navigate("./homePage")
 }
 },[isSuccess])
 // Function to handle form submission
@@ -19,6 +19,5 @@ const handleSubmit = (e) => {
 e.preventDefault();
 loginFunc(formData)
 };
-
 };
 export default login;
